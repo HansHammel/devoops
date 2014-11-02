@@ -2,6 +2,35 @@
 //    Main script of DevOOPS v1.0 Bootstrap Theme
 //
 "use strict";
+
+var _options =
+{
+	cache_Scripts: true,
+	async_Scripts: true,
+	cache_Global: false, //silly, don't use
+	cache_Html: true,
+	async_Html: true
+};
+
+//globaly cache ajax requests - removes query strings from requests
+$.ajaxSetup({
+	cache: _options.cache_Global
+});
+
+/* jQuery Extension*/
+//cache ajax requests for scripts only - removes query strings from static script resources
+jQuery.getScriptCached = function( url, success, options ) {
+	// Allow user to set any option except for dataType, cache, and url
+	options = jQuery.extend( options || {}, {
+		dataType: "script",
+		cache: _options.cache_Scripts,
+		url: url,
+		async: _options.async_Scripts,
+		success: success
+	});
+	return jQuery.ajax( options );
+};
+
 /*-------------------------------------------
 	Dynamically load plugin scripts
 ---------------------------------------------*/
@@ -13,7 +42,7 @@
 function LoadCalendarScript(callback){
 	function LoadFullCalendarScript(){
 		if(!$.fn.fullCalendar){
-			$.getScript('plugins/fullcalendar/fullcalendar.js', callback);
+			$.getScriptCached('plugins/fullcalendar/fullcalendar.js', callback);
 		}
 		else {
 			if (callback && typeof(callback) === "function") {
@@ -22,7 +51,7 @@ function LoadCalendarScript(callback){
 		}
 	}
 	if (!$.fn.moment){
-		$.getScript('plugins/moment/moment.min.js', LoadFullCalendarScript);
+		$.getScriptCached('plugins/moment/moment.min.js', LoadFullCalendarScript);
 	}
 	else {
 		LoadFullCalendarScript();
@@ -34,7 +63,7 @@ function LoadCalendarScript(callback){
 //
 function LoadOpenLayersScript(callback){
 	if (!$.fn.OpenLayers){
-		$.getScript('http://www.openlayers.org/api/OpenLayers.js', callback);
+		$.getScriptCached('http://www.openlayers.org/api/OpenLayers.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -48,7 +77,7 @@ function LoadOpenLayersScript(callback){
 //
 function LoadLeafletScript(callback){
 	if (!$.fn.L){
-		$.getScript('plugins/leaflet/leaflet.js', callback);
+		$.getScriptCached('plugins/leaflet/leaflet.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -62,7 +91,7 @@ function LoadLeafletScript(callback){
 //
 function LoadTimePickerScript(callback){
 	if (!$.fn.timepicker){
-		$.getScript('plugins/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js', callback);
+		$.getScriptCached('plugins/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -76,7 +105,7 @@ function LoadTimePickerScript(callback){
 //
 function LoadBootstrapValidatorScript(callback){
 	if (!$.fn.bootstrapValidator){
-		$.getScript('plugins/bootstrapvalidator/bootstrapValidator.min.js', callback);
+		$.getScriptCached('plugins/bootstrapvalidator/bootstrapValidator.min.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -90,7 +119,7 @@ function LoadBootstrapValidatorScript(callback){
 //
 function LoadSelect2Script(callback){
 	if (!$.fn.select2){
-		$.getScript('plugins/select2/select2.min.js', callback);
+		$.getScriptCached('plugins/select2/select2.min.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -104,10 +133,10 @@ function LoadSelect2Script(callback){
 //
 function LoadDataTablesScripts(callback){
 	function LoadDatatables(){
-		$.getScript('plugins/datatables/jquery.dataTables.js', function(){
-			$.getScript('plugins/datatables/ZeroClipboard.js', function(){
-				$.getScript('plugins/datatables/TableTools.js', function(){
-					$.getScript('plugins/datatables/dataTables.bootstrap.js', callback);
+		$.getScriptCached('plugins/datatables/jquery.dataTables.js', function(){
+			$.getScriptCached('plugins/datatables/ZeroClipboard.js', function(){
+				$.getScriptCached('plugins/datatables/TableTools.js', function(){
+					$.getScriptCached('plugins/datatables/dataTables.bootstrap.js', callback);
 				});
 			});
 		});
@@ -127,7 +156,7 @@ function LoadDataTablesScripts(callback){
 //
 function LoadFineUploader(callback){
 	if (!$.fn.fineuploader){
-		$.getScript('plugins/fineuploader/jquery.fineuploader-5.0.5.min.js', callback);
+		$.getScriptCached('plugins/fineuploader/jquery.fineuploader-5.0.5.min.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -142,11 +171,11 @@ function LoadFineUploader(callback){
 //
 function LoadXChartScript(callback){
 	function LoadXChart(){
-		$.getScript('plugins/xcharts/xcharts.min.js', callback);
+		$.getScriptCached('plugins/xcharts/xcharts.min.js', callback);
 	}
 	function LoadD3Script(){
 		if (!$.fn.d3){
-			$.getScript('plugins/d3/d3.min.js', LoadXChart)
+			$.getScriptCached('plugins/d3/d3.min.js', LoadXChart)
 		}
 		else {
 			LoadXChart();
@@ -167,13 +196,13 @@ function LoadXChartScript(callback){
 //
 function LoadFlotScripts(callback){
 	function LoadFlotScript(){
-		$.getScript('plugins/flot/jquery.flot.js', LoadFlotResizeScript);
+		$.getScriptCached('plugins/flot/jquery.flot.js', LoadFlotResizeScript);
 	}
 	function LoadFlotResizeScript(){
-		$.getScript('plugins/flot/jquery.flot.resize.js', LoadFlotTimeScript);
+		$.getScriptCached('plugins/flot/jquery.flot.resize.js', LoadFlotTimeScript);
 	}
 	function LoadFlotTimeScript(){
-		$.getScript('plugins/flot/jquery.flot.time.js', callback);
+		$.getScriptCached('plugins/flot/jquery.flot.time.js', callback);
 	}
 	if (!$.fn.flot){
 		LoadFlotScript();
@@ -192,7 +221,7 @@ function LoadFlotScripts(callback){
 function LoadMorrisScripts(callback){
 	function LoadMorrisScript(){
 		if(!$.fn.Morris){
-			$.getScript('plugins/morris/morris.min.js', callback);
+			$.getScriptCached('plugins/morris/morris.min.js', callback);
 		}
 		else {
 			if (callback && typeof(callback) === "function") {
@@ -201,7 +230,7 @@ function LoadMorrisScripts(callback){
 		}
 	}
 	if (!$.fn.raphael){
-		$.getScript('plugins/raphael/raphael-min.js', LoadMorrisScript);
+		$.getScriptCached('plugins/raphael/raphael-min.js', LoadMorrisScript);
 	}
 	else {
 		LoadMorrisScript();
@@ -213,16 +242,16 @@ function LoadMorrisScripts(callback){
 //
 function LoadAmchartsScripts(callback){
 	function LoadAmchartsScript(){
-		$.getScript('plugins/amcharts/amcharts.js', LoadFunnelScript);
+		$.getScriptCached('plugins/amcharts/amcharts.js', LoadFunnelScript);
 	}
 	function LoadFunnelScript(){
-		$.getScript('plugins/amcharts/funnel.js', LoadSerialScript);
+		$.getScriptCached('plugins/amcharts/funnel.js', LoadSerialScript);
 	}
 	function LoadSerialScript(){
-		$.getScript('plugins/amcharts/serial.js', LoadPieScript);
+		$.getScriptCached('plugins/amcharts/serial.js', LoadPieScript);
 	}
 	function LoadPieScript(){
-		$.getScript('plugins/amcharts/pie.js', callback);
+		$.getScriptCached('plugins/amcharts/pie.js', callback);
 	}
 	if (!$.fn.AmCharts){
 		LoadAmchartsScript();
@@ -239,7 +268,7 @@ function LoadAmchartsScripts(callback){
 //
 function LoadChartistScripts(callback){
 	function LoadChartistScript(){
-		$.getScript('plugins/chartist/chartist.min.js', callback);
+		$.getScriptCached('plugins/chartist/chartist.min.js', callback);
 	}
 	if (!$.fn.Chartist){
 		LoadChartistScript();
@@ -256,10 +285,10 @@ function LoadChartistScripts(callback){
 //
 function LoadSpringyScripts(callback){
 	function LoadSpringyScript(){
-		$.getScript('plugins/springy/springy.js', LoadSpringyUIScript);
+		$.getScriptCached('plugins/springy/springy.js', LoadSpringyUIScript);
 	}
 	function LoadSpringyUIScript(){
-		$.getScript('plugins/springy/springyui.js', callback);
+		$.getScriptCached('plugins/springy/springyui.js', callback);
 	}
 	if (!$.fn.Springy){
 		LoadSpringyScript();
@@ -459,7 +488,7 @@ function DrawAmChart3(){
 
 	// SERIAL CHART
 	chart = new AmCharts.AmSerialChart();
-	chart.pathToImages = "../amcharts/images/";
+	chart.pathToImages = "./plugins/amcharts/images/";
 	chart.dataProvider = chartData;
 	chart.categoryField = "date";
 
@@ -645,7 +674,7 @@ function DrawAmChart4(){
 
 	// SERIAL CHART
 	chart = new AmCharts.AmSerialChart();
-	chart.pathToImages = "../amcharts/images/";
+	chart.pathToImages = "./plugins/amcharts/images/";
 	chart.dataProvider = chartData;
 	chart.categoryField = "year";
 	chart.startDuration = 1;
@@ -1014,7 +1043,7 @@ function DrawChartistChart2(){
 		return data;
 	}, {
 		labels: [],
-		series: times(4).map(function() { return new Array() })
+		series: times(4).map(function() { return []; })
 	});
 	var options = {
 		showLine: false,
@@ -1091,7 +1120,7 @@ function DrawChartistChart5(){
 //
 function LoadFancyboxScript(callback){
 	if (!$.fn.fancybox){
-		$.getScript('plugins/fancybox/jquery.fancybox.js', callback);
+		$.getScriptCached('plugins/fancybox/jquery.fancybox.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -1105,7 +1134,7 @@ function LoadFancyboxScript(callback){
 //
 function LoadKnobScripts(callback){
 	if(!$.fn.knob){
-		$.getScript('plugins/jQuery-Knob/jquery.knob.js', callback);
+		$.getScriptCached('plugins/jQuery-Knob/jquery.knob.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -1119,7 +1148,7 @@ function LoadKnobScripts(callback){
 //
 function LoadSparkLineScript(callback){
 	if(!$.fn.sparkline){
-		$.getScript('plugins/sparkline/jquery.sparkline.min.js', callback);
+		$.getScriptCached('plugins/sparkline/jquery.sparkline.min.js', callback);
 	}
 	else {
 		if (callback && typeof(callback) === "function") {
@@ -1147,7 +1176,8 @@ function LoadAjaxContent(url){
 			alert(errorThrown);
 		},
 		dataType: "html",
-		async: false
+		async: _options.async_Html,
+		cache: _options.cache_Html
 	});
 }
 //
@@ -1303,7 +1333,7 @@ function DrawKnob(elem){
 		},
 		release : function (value) {
 			//console.log(this.$.attr('value'));
-			console.log("release : " + value);
+			//console.log("release : " + value);
 		},
 		cancel : function () {
 			console.log("cancel : ", this);
@@ -1351,7 +1381,7 @@ function DrawKnob(elem){
 	var i=0;
 	var $idir = $("div.idir");
 	var $ival = $("div.ival");
-	var incr = function() { i++; $idir.show().html("+").fadeOut(); $ival.html(i); }
+	var incr = function() { i++; $idir.show().html("+").fadeOut(); $ival.html(i); };
 	var decr = function() { i--; $idir.show().html("-").fadeOut(); $ival.html(i); };
 	$("input.infinite").knob(
 		{
@@ -2783,8 +2813,8 @@ function FileUpload(){
 		},
 		thumbnails: {
 			placeholders: {
-				waitingPath: "assets/waiting-generic.png",
-				notAvailablePath: "assets/not_available-generic.png"
+				waitingPath: "img/waiting-generic.png",
+				notAvailablePath: "img/not_available-generic.png"
 			}
 		},
 		request: {
@@ -3488,7 +3518,7 @@ $(document).ready(function () {
 	});
 	$('.about').on('click', function(){
 		$('#about').toggleClass('about-h');
-	})
+	});
 	$('#about').on('mouseleave', function(){
 		$('#about').removeClass('about-h');
 	})
